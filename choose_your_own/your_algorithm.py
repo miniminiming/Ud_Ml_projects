@@ -31,14 +31,24 @@ plt.show()
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
 
+# i use knn classifier
+X = features_train
+y = labels_train
+from sklearn.neighbors import KNeighborsClassifier
+# when k = 3 score=0.936
+# when k = 4 score=0.94  this is the best score
+# when k = 5 score=0.92
+clf = KNeighborsClassifier(n_neighbors=4)
+clf.fit(X, y)
 
-
+print "knn accuracy score :",clf.score(features_test,labels_test)
 
 
 
 
 
 try:
+    #save a picture
     prettyPicture(clf, features_test, labels_test)
 except NameError:
     pass

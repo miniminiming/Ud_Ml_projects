@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+from __future__ import division
 import pickle
 import numpy
 numpy.random.seed(42)
@@ -29,6 +29,8 @@ features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
 
 
+
+
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
 ### train on only 150 events to put ourselves in this regime
@@ -38,6 +40,24 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+print "start point:",len(features_train)
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(random_state=0,min_samples_split = 40)
+clf.fit(features_train,labels_train)
 
+acc = clf.score(features_test, labels_test)
 
+print "accuracy rate:",acc
+strong_feature = [score for score in clf.feature_importances_ if score > 0.2]
 
+index = -1
+result_index = []
+for a in clf.feature_importances_:
+    index +=1
+    if a>0.2:
+        result_index.append(index)
+
+print "result_index:",result_index
+print "most strong feature:",numpy.where(clf.feature_importances_ == strong_feature[0])
+print "most strong feature slope:",strong_feature
+print "powerful word:",[vectorizer.get_feature_names()[power] for power in result_index]

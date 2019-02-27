@@ -26,7 +26,22 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+import numpy as np
+X = features_train
+Y = labels_train
+from sklearn.naive_bayes import GaussianNB
+clf = GaussianNB()
 
+t0 = time()
+clf.fit(X, Y)
+print "training time:", round(time()-t0, 3), "s"
+
+t0 = time()
+prdice_res = clf.predict(features_test)
+print "predice time:", round(time()-t0, 3), "s"
+
+#accurate
+print clf.score(features_test,labels_test)
 
 #########################################################
 

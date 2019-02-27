@@ -2,6 +2,7 @@
 
 from nltk.stem.snowball import SnowballStemmer
 import string
+# from __future__ import print_function
 
 def parseOutText(f):
     """ given an opened email file f, parse out all text below the
@@ -33,11 +34,16 @@ def parseOutText(f):
         ### split the text string into individual words, stem each word,
         ### and append the stemmed word to words (make sure there's a single
         ### space between each stemmed word)
-        
 
+        from nltk.stem.snowball import SnowballStemmer
+        stemmer = SnowballStemmer("english")
 
+        # single_words = text_string.split()
+        # singles = [stemmer.stem(word) for word in single_words]
+        # words = " ".join(singles)
 
-
+        # good code
+        words = " ".join([stemmer.stem(word) for word in text_string.split()])
     return words
 
     
@@ -46,7 +52,6 @@ def main():
     ff = open("../text_learning/test_email.txt", "r")
     text = parseOutText(ff)
     print text
-
 
 
 if __name__ == '__main__':

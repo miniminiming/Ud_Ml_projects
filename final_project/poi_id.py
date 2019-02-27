@@ -10,13 +10,15 @@ from tester import dump_classifier_and_data
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi','salary'] # You will need to use more features
+features_list = ['poi','salary','bonus'] # You will need to use more features
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
-
+# print "datadict",data_dict
 ### Task 2: Remove outliers
+#remove biggest data
+data_dict.pop('TOTAL',0)
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
@@ -24,6 +26,8 @@ my_dataset = data_dict
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
+# print features
+
 
 ### Task 4: Try a varity of classifiers
 ### Please name your classifier clf for easy export below.
@@ -32,8 +36,16 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
 # Provided to give you a starting point. Try a variety of classifiers.
-from sklearn.naive_bayes import GaussianNB
-clf = GaussianNB()
+
+# from sklearn.naive_bayes import GaussianNB
+# clf = GaussianNB()
+
+from sklearn.svm import SVC
+# clf = SVC(kernel = 'linear', C = 1000000)
+clf = SVC(kernel = 'rbf', C = 1000000)
+
+# from sklearn.tree import DecisionTreeClassifier
+# clf = DecisionTreeClassifier(random_state=0,min_samples_split = 40)
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
@@ -46,6 +58,21 @@ clf = GaussianNB()
 from sklearn.cross_validation import train_test_split
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3, random_state=42)
+
+
+#use pca
+from sklearn.decomposition import RandomizedPCA
+n_components = 1
+pca = RandomizedPCA(n_components=n_components, whiten=True).fit(features_train)
+pca_train = pca.transform(features_train)
+pca_test = pca.transform(features_test)
+
+#use pca train data
+# clf.fit(pca_train,labels_train)
+# print clf.score(pca_test,labels_test)
+
+clf.fit(features_train,labels_train)
+print clf.score(features_test,labels_test)
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
